@@ -1,0 +1,63 @@
+/* Leaderboard container */
+.container {
+    max-width: 400px;
+    margin: 80px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* Leaderboard titel */
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Scores lijst */
+ol {
+    list-style: decimal;
+    padding-left: 20px;
+    text-align: left;
+}
+
+ol li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 18px;
+    color: #555;
+}
+
+/* Menu styling */
+#menuButton {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 28px;
+    color: #333;
+    cursor: pointer;
+    z-index: 10;
+}
+
+#menu {
+    position: absolute;
+    left: -220px;
+    width: 220px;
+    height: 100%;
+    background: #111;
+    transition: 0.3s;
+    padding-top: 60px;
+    z-index: 9;
+}
+
+#menu a {
+    color: white;
+    display: block;
+    padding: 15px;
+    text-decoration: none;
+}
+
+#menu a:hover {
+    background: #222;
+}
