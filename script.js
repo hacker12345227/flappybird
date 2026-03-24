@@ -107,6 +107,12 @@ function updatePipes() {
     pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
 }
 
+// Draw background
+function drawBackground() {
+    ctx.fillStyle = "#70c5ce"; // blauw
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+}
+
 // Draw bird
 function drawBird() {
     ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
@@ -156,8 +162,7 @@ function loop() {
     updateBird();
     updatePipes();
 
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
+    drawBackground();
     drawPipes();
     drawGround();
     drawBird();
