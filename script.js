@@ -2,7 +2,6 @@
 let currentUser = localStorage.getItem("currentUser");
 if (!currentUser) location.href = "login/index.html";
 
-// USERS
 let users = JSON.parse(localStorage.getItem("users"));
 
 // CANVAS
@@ -20,19 +19,12 @@ const menuButton = document.getElementById("menuButton");
 const menu = document.getElementById("menu");
 
 menuButton.onclick = () => {
-    menu.style.left = menu.style.left === "0px" ? "-200px" : "0px";
+    menu.style.left = menu.style.left === "0px" ? "-220px" : "0px";
 };
-
-// SKIN
-function setSkin(skin) {
-    users[currentUser].skin = skin;
-    localStorage.setItem("users", JSON.stringify(users));
-    location.reload();
-}
 
 // IMAGES
 const birdImg = new Image();
-birdImg.src = "images/" + users[currentUser].skin;
+birdImg.src = "images/bird.png";
 
 const groundImg = new Image();
 groundImg.src = "images/ground.png";
@@ -129,7 +121,7 @@ function draw(){
 
     ctx.fillStyle="white";
     ctx.font="32px Arial";
-    ctx.fillText(score,canvas.width/2,50);
+    ctx.fillText(score,canvas.width/2-10,50);
 }
 
 // SAVE SCORE
