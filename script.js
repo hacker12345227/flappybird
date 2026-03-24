@@ -2,12 +2,13 @@
 let currentUser = localStorage.getItem("currentUser");
 if (!currentUser) location.href = "login/index.html";
 
-let users = JSON.parse(localStorage.getItem("users"));
+let users = JSON.parse(localStorage.getItem("users")) || {};
 
 // CANVAS
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+// FULL HEIGHT
 function resizeCanvas() {
     canvas.height = window.innerHeight;
 }
@@ -43,12 +44,21 @@ let groundX = 0;
 const groundHeight = 112;
 
 // INPUT
-function flap(){ bird.velocity = bird.lift; }
-canvas.onclick = flap;
+function flap(){
+    bird.velocity = bird.lift;
+}
 
-document.onkeydown = e=>{
-    if(e.code==="Space"){
-        if(!gameStarted || gameOver) startButton.click();
+canvas.onclick = () => {
+    if (!gameStarted || gameOver) startButton.click();
+    else flap();
+};
+
+document.onkeydown = e => {
+    if (e.code === "Space") {
+        e.preventDefault();
+
+        if (!gameStarted) startButton.click();
+        else if (gameOver) startButton.click();
         else flap();
     }
 };
@@ -59,10 +69,11 @@ const overlayText = document.getElementById("overlayText");
 const startButton = document.getElementById("startButton");
 
 // START
-startButton.onclick = ()=>{
-    overlay.style.display="none";
-    if(gameOver) resetGame();
-    gameStarted=true;
+startButton.onclick = () => {
+    if (gameOver) resetGame();
+
+    overlay.style.display = "none";
+    gameStarted = true;
     loop();
 };
 
@@ -71,64 +82,82 @@ function update(){
     bird.velocity += bird.gravity;
     bird.y += bird.velocity;
 
-    if(bird.y+bird.height > canvas.height-groundHeight){
+    if(bird.y + bird.height > canvas.height - groundHeight){
         gameOver = true;
     }
 
-    if(frame%90===0){
-        let gap=150;
-        let top=Math.random()*(canvas.height-groundHeight-gap-50)+25;
-        pipes.push({x:canvas.width,width:52,top:top,bottom:canvas.height-groundHeight-top-gap,passed:false});
+    if(frame % 90 === 0){
+        let gap = 150;
+        let top = Math.random() * (canvas.height - groundHeight - gap - 50) + 25;
+
+        pipes.push({
+            x: canvas.width,
+            width: 52,
+            top: top,
+            bottom: canvas.height - groundHeight - top - gap,
+            passed: false
+        });
     }
 
     pipes.forEach(p=>{
-        p.x-=2;
+        p.x -= 2;
 
-        if(bird.x < p.x+p.width && bird.x+bird.width > p.x &&
-          (bird.y<p.top || bird.y+bird.height>canvas.height-groundHeight-p.bottom)){
-            gameOver=true;
+        if(
+            bird.x < p.x + p.width &&
+            bird.x + bird.width > p.x &&
+            (bird.y < p.top || bird.y + bird.height > canvas.height - groundHeight - p.bottom)
+        ){
+            gameOver = true;
         }
 
-        if(!p.passed && p.x+p.width<bird.x){
+        if(!p.passed && p.x + p.width < bird.x){
             score++;
-            p.passed=true;
+            p.passed = true;
         }
     });
 
-    pipes = pipes.filter(p=>p.x+p.width>0);
+    pipes = pipes.filter(p => p.x + p.width > 0);
 }
 
 // DRAW
 function draw(){
-    ctx.fillStyle="#70c5ce";
-    ctx.fillRect(0,0,canvas.width,canvas.height-groundHeight);
+    // sky
+    ctx.fillStyle = "#70c5ce";
+    ctx.fillRect(0, 0, canvas.width, canvas.height - groundHeight);
 
+    // pipes
     pipes.forEach(p=>{
         ctx.save();
-        ctx.translate(p.x+p.width/2,p.top/2);
+        ctx.translate(p.x + p.width/2, p.top/2);
         ctx.scale(1,-1);
-        ctx.drawImage(pipeImg,-p.width/2,-p.top/2,p.width,p.top);
+        ctx.drawImage(pipeImg, -p.width/2, -p.top/2, p.width, p.top);
         ctx.restore();
 
-        ctx.drawImage(pipeImg,p.x,canvas.height-groundHeight-p.bottom,p.width,p.bottom);
+        ctx.drawImage(pipeImg, p.x, canvas.height - groundHeight - p.bottom, p.width, p.bottom);
     });
 
-    groundX=(groundX-2)%canvas.width;
-    ctx.drawImage(groundImg,groundX,canvas.height-groundHeight,canvas.width,groundHeight);
-    ctx.drawImage(groundImg,groundX+canvas.width,canvas.height-groundHeight,canvas.width,groundHeight);
+    // ground
+    groundX = (groundX - 2) % canvas.width;
+    ctx.drawImage(groundImg, groundX, canvas.height - groundHeight, canvas.width, groundHeight);
+    ctx.drawImage(groundImg, groundX + canvas.width, canvas.height - groundHeight, canvas.width, groundHeight);
 
-    ctx.drawImage(birdImg,bird.x,bird.y,bird.width,bird.height);
+    // bird
+    ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 
-    ctx.fillStyle="white";
-    ctx.font="32px Arial";
-    ctx.fillText(score,canvas.width/2-10,50);
+    // score
+    ctx.fillStyle = "white";
+    ctx.font = "32px Arial";
+    ctx.fillText(score, canvas.width / 2 - 10, 50);
 }
 
 // SAVE SCORE
 function saveScore(){
+    if (!users[currentUser].scores) users[currentUser].scores = [];
+
     users[currentUser].scores.push(score);
     users[currentUser].scores.sort((a,b)=>b-a);
     users[currentUser].scores = users[currentUser].scores.slice(0,10);
+
     localStorage.setItem("users", JSON.stringify(users));
 }
 
@@ -136,8 +165,8 @@ function saveScore(){
 function loop(){
     if(gameOver){
         saveScore();
-        overlayText.innerHTML="Game Over<br>"+score;
-        overlay.style.display="flex";
+        overlayText.innerHTML = "Game Over<br>" + score;
+        overlay.style.display = "flex";
         return;
     }
 
@@ -149,10 +178,10 @@ function loop(){
 
 // RESET
 function resetGame(){
-    bird.y=200;
-    bird.velocity=0;
-    pipes=[];
-    score=0;
-    gameOver=false;
-    frame=0;
+    bird.y = 200;
+    bird.velocity = 0;
+    pipes = [];
+    score = 0;
+    gameOver = false;
+    frame = 0;
 }
