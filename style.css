@@ -1,74 +1,40 @@
 body {
   margin: 0;
-  overflow: hidden;
   background: black;
-  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* GAME WRAPPER → PERFECT CENTREREN */
+#gameWrapper {
+  position: relative;
+  width: 400px;
+  margin: 0 auto;
 }
 
 /* CANVAS */
 canvas {
   display: block;
-  margin: 0 auto;
   background: black;
 }
 
-/* MENU */
-#menuButton {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  font-size: 28px;
-  color: white;
-  cursor: pointer;
-  z-index: 10;
-}
-
-#menu {
-  position: absolute;
-  top: 0;
-  left: -220px;
-  width: 220px;
-  height: 100%;
-  background: #111;
-  transition: 0.3s;
-  padding-top: 60px;
-}
-
-#menu a {
-  display: block;
-  color: white;
-  padding: 15px 20px;
-  text-decoration: none;
-  border-bottom: 1px solid #222;
-}
-
-#menu a:hover {
-  background: #222;
-}
-
-/* OVERLAY */
+/* OVERLAY precies over canvas */
 #overlay {
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 400px;
+  left: 0;
+  width: 100%;
   height: 100%;
-  display: none;
+  display: flex; /* zichtbaar bij start */
   justify-content: center;
   align-items: center;
   flex-direction: column;
   background: rgba(0,0,0,0.6);
   color: white;
-  font-size: 42px;
+  font-size: 40px;
 }
 
 #startButton {
   margin-top: 20px;
-  padding: 12px 25px;
   font-size: 20px;
-  border: none;
-  border-radius: 10px;
-  background: #ffcc00;
-  cursor: pointer;
+  padding: 10px 20px;
 }
