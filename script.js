@@ -7,7 +7,6 @@ const startButton = document.getElementById('startButton');
 const canvasWidth = canvas.width;
 const canvasHeight = canvas.height;
 
-// Game variables
 let bird = {
     x: 50,
     y: 200,
@@ -17,7 +16,6 @@ let bird = {
     gravity: 0.6,
     lift: -10,
     frame: 0,
-    flapFrames: []
 };
 
 let pipes = [];
@@ -26,22 +24,7 @@ let score = 0;
 let gameOver = false;
 let gameStarted = false;
 
-// Load images
-const bgImg = new Image();
-bgImg.src = 'images/background.png';
-
-const groundImg = new Image();
-groundImg.src = 'images/ground.png';
 const groundHeight = 112;
-
-const pipeImg = new Image();
-pipeImg.src = 'images/pipe.png';
-
-for (let i = 1; i <= 3; i++) {
-    let img = new Image();
-    img.src = `images/bird${i}.png`;
-    bird.flapFrames.push(img);
-}
 
 // Input
 function flap() {
@@ -94,10 +77,6 @@ function updateBird() {
         bird.y = 0;
         bird.velocity = 0;
     }
-
-    if (frameCount % 5 === 0) {
-        bird.frame = (bird.frame + 1) % bird.flapFrames.length;
-    }
 }
 
 // Pipes update
@@ -136,29 +115,26 @@ function updatePipes() {
 
 // Draw everything
 function drawScene() {
-    // Background
-    ctx.drawImage(bgImg, 0, 0, canvasWidth, canvasHeight - groundHeight);
+    // Sky
+    ctx.fillStyle = "#70c5ce";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight - groundHeight);
 
     // Pipes
     pipes.forEach(pipe => {
-        // Top pipe (flipped)
-        ctx.save();
-        ctx.translate(pipe.x + pipe.width / 2, pipe.top / 2);
-        ctx.scale(1, -1);
-        ctx.drawImage(pipeImg, -pipe.width / 2, -pipe.top / 2, pipe.width, pipe.top);
-        ctx.restore();
-
-        // Bottom pipe
-        ctx.drawImage(pipeImg, pipe.x, canvasHeight - groundHeight - pipe.bottom, pipe.width, pipe.bottom);
+        ctx.fillStyle = "green";
+        ctx.fillRect(pipe.x, 0, pipe.width, pipe.top); // top pipe
+        ctx.fillRect(pipe.x, canvasHeight - groundHeight - pipe.bottom, pipe.width, pipe.bottom); // bottom pipe
     });
 
     // Moving ground
     let groundX = -(frameCount * 2) % canvasWidth;
-    ctx.drawImage(groundImg, groundX, canvasHeight - groundHeight, canvasWidth, groundHeight);
-    ctx.drawImage(groundImg, groundX + canvasWidth, canvasHeight - groundHeight, canvasWidth, groundHeight);
+    ctx.fillStyle = "#deaa88";
+    ctx.fillRect(groundX, canvasHeight - groundHeight, canvasWidth, groundHeight);
+    ctx.fillRect(groundX + canvasWidth, canvasHeight - groundHeight, canvasWidth, groundHeight);
 
     // Bird
-    ctx.drawImage(bird.flapFrames[bird.frame], bird.x, bird.y, bird.width, bird.height);
+    ctx.fillStyle = "yellow";
+    ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
 
     // Score
     ctx.fillStyle = "white";
