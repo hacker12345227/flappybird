@@ -24,20 +24,27 @@
 </head>
 <body>
 
-  <div id="menuButton">☰</div>
+<div id="menuButton">☰</div>
 
 <div id="menu">
   <a href="index.html">Game</a>
   <a href="leaderboard/index.html">Leaderboard</a>
+  <a href="login/index.html">Logout</a>
 </div>
-  
-  <canvas id="gameCanvas" width="400"></canvas>
 
-  <div id="overlay">
-    <div id="overlayText">Flappy Bird</div>
-    <button id="startButton">Start</button>
-  </div>
+<div id="skins">
+  <img src="images/bird1.png" onclick="setSkin('bird1.png')">
+  <img src="images/bird2.png" onclick="setSkin('bird2.png')">
+  <img src="images/bird3.png" onclick="setSkin('bird3.png')">
+</div>
 
-  <script src="script.js"></script>
+<canvas id="gameCanvas" width="400"></canvas>
+
+<div id="overlay">
+  <div id="overlayText">Flappy Bird</div>
+  <button id="startButton">Start</button>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
