@@ -3,55 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <title>Login</title>
-<style>
-body {
-  margin:0;
-  background: linear-gradient(#70c5ce, #4ec0ca);
-  font-family: Arial;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-}
-
-.box {
-  background:white;
-  padding:30px;
-  border-radius:15px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
-  text-align:center;
-}
-
-input {
-  display:block;
-  width:200px;
-  padding:10px;
-  margin:10px auto;
-  border-radius:8px;
-  border:1px solid #ccc;
-}
-
-button {
-  padding:10px 20px;
-  margin:5px;
-  border:none;
-  border-radius:8px;
-  background:#70c5ce;
-  color:white;
-  cursor:pointer;
-}
-</style>
+<link rel="stylesheet" href="../global.css">
 </head>
 <body>
 
-<div class="box">
-<h2>Login / Register</h2>
+<div class="container">
+  <h2>Login / Register</h2>
 
-<input id="username" placeholder="Gebruikersnaam">
-<input id="password" type="password" placeholder="Wachtwoord">
+  <input id="username" placeholder="Gebruikersnaam">
+  <input id="password" type="password" placeholder="Wachtwoord">
 
-<button onclick="login()">Login</button>
-<button onclick="register()">Register</button>
+  <button onclick="login()">Login</button>
+  <button onclick="register()">Register</button>
 </div>
 
 <script>
