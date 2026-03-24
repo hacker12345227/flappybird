@@ -185,3 +185,16 @@ function resetGame(){
     gameOver = false;
     frame = 0;
 }
+
+// DRAW START SCREEN (ZONDER GAME LOOP)
+function drawStartScreen() {
+    // lucht
+    ctx.fillStyle = "#70c5ce";
+    ctx.fillRect(0, 0, canvas.width, canvas.height - groundHeight);
+
+    // grond
+    ctx.drawImage(groundImg, 0, canvas.height - groundHeight, canvas.width, groundHeight);
+
+    // vogel stil
+    ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+}
