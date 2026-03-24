@@ -1,93 +1,148 @@
+<!-- index.html -->
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="no-js"> <!--<![endif]-->
-
+<html lang="nl">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Play Flappy Bird</title>
-    <meta name="description" content="Play Flappy Bird for free online in HTML5">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-    <link rel="stylesheet" href="style/app.css">
-
-
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="icon" type="image/png" href="img/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
-    <link rel="shortcut icon" href="img/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png" />
-    <link rel="manifest" href="img/site.webmanifest" />
-    <script src="playcanvas-stable.min.js"></script>
-    <script src="__settings__.js"></script>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9MH7SB6EF5"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-9MH7SB6EF5');
-    </script>
-
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2446035213984900"
-        crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <title>Flappy Bird Deluxe</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
+<canvas id="gameCanvas" width="400" height="600"></canvas>
+<div id="overlay">
+  <div id="overlayText">Flappy Bird</div>
+  <button id="startButton">Start</button>
+</div>
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const overlay = document.getElementById('overlay');
+const overlayText = document.getElementById('overlayText');
+const startButton = document.getElementById('startButton');
 
-            <div class="navbar-header">
-                <button class="navbar-toggle" data-target="#bs-example-navbar-collapse-1" data-toggle="collapse"
-                    type="button">
-                    <span class="sr-only">
-                        Toggle navigation
-                    </span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a href="index.html">
-                    <h1 class="navbar-brand">Flappy Bird</h1>
-                </a>
-            </div>
-            <!-- Collect the nav links, forms, and other content for toggling -->
+let bird = {
+  x: 50,
+  y: 150,
+  width: 34,
+  height: 24,
+  gravity: 0.6,
+  lift: -10,
+  velocity: 0
+};
 
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li class="active">
-                        <a href="index.html">Game</a>
-                    </li>
-                    <li>
-                        <a href="leaderboard.html">Leaderboard</a>
-                    </li>
+let pipes = [];
+let frame = 0;
+let score = 0;
+let gameOver = false;
+let gameStarted = false;
 
-                    <li>
-                        <a href="about.html">About</a>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="privacy.html">Privacy Policy</a>
-                    </li>
-                </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-    </nav>
-    <div id="application-canvas-container" class="container">
-        <script src="__start__.js"></script>
-        <script src="__loading__.js"></script>
-    </div>
-    <script src="app.js"></script>
+// Bird sprite
+const birdImg = new Image();
+birdImg.src = 'images/bird.png';
 
+function drawBird() {
+  ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+}
+
+function drawPipes() {
+  ctx.fillStyle = "#2ecc71";
+  pipes.forEach(pipe => {
+    ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
+    ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom);
+  });
+}
+
+function updatePipes() {
+  if (frame % 90 === 0) {
+    let top = Math.random() * (canvas.height / 2);
+    let gap = 150;
+    pipes.push({
+      x: canvas.width,
+      width: 40,
+      top: top,
+      bottom: canvas.height - top - gap
+    });
+  }
+
+  pipes.forEach(pipe => {
+    pipe.x -= 2;
+
+    if (
+      bird.x < pipe.x + pipe.width &&
+      bird.x + bird.width > pipe.x &&
+      (bird.y < pipe.top || bird.y + bird.height > canvas.height - pipe.bottom)
+    ) {
+      gameOver = true;
+    }
+
+    if (!pipe.passed && pipe.x + pipe.width < bird.x) {
+      score++;
+      pipe.passed = true;
+    }
+  });
+
+  pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
+}
+
+function updateBird() {
+  bird.velocity += bird.gravity;
+  bird.y += bird.velocity;
+
+  if (bird.y + bird.height > canvas.height || bird.y < 0) {
+    gameOver = true;
+  }
+}
+
+function drawScore() {
+  ctx.fillStyle = "white";
+  ctx.font = "32px Arial";
+  ctx.fillText(score, canvas.width / 2 - 10, 50);
+}
+
+function loop() {
+  if (!gameStarted) return;
+
+  if (gameOver) {
+    overlayText.textContent = 'Game Over\nScore: ' + score;
+    startButton.textContent = 'Restart';
+    overlay.style.display = 'flex';
+    return;
+  }
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  updateBird();
+  updatePipes();
+
+  drawBird();
+  drawPipes();
+  drawScore();
+
+  frame++;
+  requestAnimationFrame(loop);
+}
+
+function flap() {
+  bird.velocity = bird.lift;
+}
+
+document.addEventListener("keydown", flap);
+canvas.addEventListener("click", flap);
+
+startButton.addEventListener('click', () => {
+  overlay.style.display = 'none';
+  if (startButton.textContent === 'Restart') resetGame();
+  gameStarted = true;
+  loop();
+});
+
+function resetGame() {
+  bird.y = 150;
+  bird.velocity = 0;
+  pipes = [];
+  frame = 0;
+  score = 0;
+  gameOver = false;
+}
+</script>
 </body>
-
-
 </html>
