@@ -121,11 +121,9 @@ function update(){
 
 // DRAW
 function draw(){
-    // sky
     ctx.fillStyle = "#70c5ce";
     ctx.fillRect(0, 0, canvas.width, canvas.height - groundHeight);
 
-    // pipes
     pipes.forEach(p=>{
         ctx.save();
         ctx.translate(p.x + p.width/2, p.top/2);
@@ -136,18 +134,24 @@ function draw(){
         ctx.drawImage(pipeImg, p.x, canvas.height - groundHeight - p.bottom, p.width, p.bottom);
     });
 
-    // ground
     groundX = (groundX - 2) % canvas.width;
     ctx.drawImage(groundImg, groundX, canvas.height - groundHeight, canvas.width, groundHeight);
     ctx.drawImage(groundImg, groundX + canvas.width, canvas.height - groundHeight, canvas.width, groundHeight);
 
-    // bird
     ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 
-    // score
     ctx.fillStyle = "white";
     ctx.font = "32px Arial";
     ctx.fillText(score, canvas.width / 2 - 10, 50);
+}
+
+// ⭐ BELANGRIJK: START SCHERM TEKENEN
+function drawStartScreen(){
+    ctx.fillStyle = "#70c5ce";
+    ctx.fillRect(0, 0, canvas.width, canvas.height - groundHeight);
+
+    ctx.drawImage(groundImg, 0, canvas.height - groundHeight, canvas.width, groundHeight);
+    ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 }
 
 // SAVE SCORE
@@ -186,15 +190,5 @@ function resetGame(){
     frame = 0;
 }
 
-// DRAW START SCREEN (ZONDER GAME LOOP)
-function drawStartScreen() {
-    // lucht
-    ctx.fillStyle = "#70c5ce";
-    ctx.fillRect(0, 0, canvas.width, canvas.height - groundHeight);
-
-    // grond
-    ctx.drawImage(groundImg, 0, canvas.height - groundHeight, canvas.width, groundHeight);
-
-    // vogel stil
-    ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
-}
+// ⭐ DIRECT TEKENEN BIJ LADEN
+drawStartScreen();
