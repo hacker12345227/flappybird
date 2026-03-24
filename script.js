@@ -29,7 +29,7 @@ groundImg.src = 'images/ground.png';
 const pipeImg = new Image();
 pipeImg.src = 'images/pipe.png';
 
-// Pas overlay tonen als alle assets geladen zijn
+// Toon overlay pas als alle afbeeldingen geladen zijn
 let assetsLoaded = 0;
 function checkAssetsLoaded() {
     assetsLoaded++;
@@ -42,7 +42,7 @@ pipeImg.onload = checkAssetsLoaded;
 // Flap
 function flap() { bird.velocity = bird.lift; }
 
-// Input: click op canvas
+// Input: klik op canvas
 canvas.addEventListener("click", flap);
 
 // Input: Space
@@ -109,8 +109,11 @@ function updatePipes() {
 
 // Draw background
 function drawBackground() {
-    ctx.fillStyle = "#70c5ce"; // blauw
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    ctx.fillStyle = "#70c5ce"; // luchtblauw
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight - groundHeight);
+
+    ctx.fillStyle = "black"; // alles onder de grond zwart
+    ctx.fillRect(0, canvasHeight - groundHeight, canvasWidth, groundHeight);
 }
 
 // Draw bird
@@ -118,7 +121,7 @@ function drawBird() {
     ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 }
 
-// Draw pipes with image
+// Draw pipes
 function drawPipes() {
     pipes.forEach(pipe => {
         // Top pipe (flipped)
