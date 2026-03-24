@@ -4,59 +4,87 @@
 <meta charset="UTF-8">
 <title>Login</title>
 <style>
-body { background:black; color:white; text-align:center; font-family:Arial; }
-input, button { padding:10px; margin:10px; font-size:18px; }
+body {
+  margin:0;
+  background: linear-gradient(#70c5ce, #4ec0ca);
+  font-family: Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.box {
+  background:white;
+  padding:30px;
+  border-radius:15px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  text-align:center;
+}
+
+input {
+  display:block;
+  width:200px;
+  padding:10px;
+  margin:10px auto;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button {
+  padding:10px 20px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  background:#70c5ce;
+  color:white;
+  cursor:pointer;
+}
 </style>
 </head>
 <body>
 
-<h1>Login / Register</h1>
+<div class="box">
+<h2>Login / Register</h2>
 
-<input id="username" placeholder="Gebruikersnaam"><br>
-<input id="password" type="password" placeholder="Wachtwoord"><br>
+<input id="username" placeholder="Gebruikersnaam">
+<input id="password" type="password" placeholder="Wachtwoord">
 
 <button onclick="login()">Login</button>
 <button onclick="register()">Register</button>
+</div>
 
 <script>
-function getUsers() {
-    return JSON.parse(localStorage.getItem("users")) || {};
+function getUsers(){
+  return JSON.parse(localStorage.getItem("users")) || {};
 }
 
-function saveUsers(users) {
-    localStorage.setItem("users", JSON.stringify(users));
+function saveUsers(u){
+  localStorage.setItem("users", JSON.stringify(u));
 }
 
-function login() {
-    let u = username.value;
-    let p = password.value;
+function login(){
+  let u=username.value;
+  let p=password.value;
+  let users=getUsers();
 
-    let users = getUsers();
-
-    if (users[u] && users[u].password === p) {
-        localStorage.setItem("currentUser", u);
-        location.href = "../index.html";
-    } else {
-        alert("Verkeerd!");
-    }
+  if(users[u] && users[u].password===p){
+    localStorage.setItem("currentUser",u);
+    location.href="../index.html";
+  } else alert("Verkeerd!");
 }
 
-function register() {
-    let u = username.value;
-    let p = password.value;
+function register(){
+  let u=username.value;
+  let p=password.value;
+  let users=getUsers();
 
-    let users = getUsers();
+  if(users[u]) return alert("Bestaat al");
 
-    if (users[u]) return alert("Bestaat al!");
+  users[u]={password:p,scores:[]};
+  saveUsers(users);
 
-    users[u] = {
-        password: p,
-        skin: "bird1.png",
-        scores: []
-    };
-
-    saveUsers(users);
-    alert("Account gemaakt!");
+  alert("Account gemaakt!");
 }
 </script>
 
