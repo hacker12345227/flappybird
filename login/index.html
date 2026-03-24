@@ -2,52 +2,57 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login</title>
-<link rel="stylesheet" href="../global.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-  <h2>Login / Register</h2>
+    <h2>Login / Register</h2>
 
-  <input id="username" placeholder="Gebruikersnaam">
-  <input id="password" type="password" placeholder="Wachtwoord">
+    <input id="username" placeholder="Gebruikersnaam">
+    <input id="password" type="password" placeholder="Wachtwoord">
 
-  <button onclick="login()">Login</button>
-  <button onclick="register()">Register</button>
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Register</button>
+
+    <a href="../leaderboard/index.html">Bekijk Leaderboard</a>
 </div>
 
 <script>
-function getUsers(){
-  return JSON.parse(localStorage.getItem("users")) || {};
+function getUsers() {
+    return JSON.parse(localStorage.getItem("users")) || {};
 }
 
-function saveUsers(u){
-  localStorage.setItem("users", JSON.stringify(u));
+function saveUsers(u) {
+    localStorage.setItem("users", JSON.stringify(u));
 }
 
-function login(){
-  let u=username.value;
-  let p=password.value;
-  let users=getUsers();
+function login() {
+    let u = username.value.trim();
+    let p = password.value;
+    let users = getUsers();
 
-  if(users[u] && users[u].password===p){
-    localStorage.setItem("currentUser",u);
-    location.href="../index.html";
-  } else alert("Verkeerd!");
+    if(users[u] && users[u].password === p){
+        localStorage.setItem("currentUser", u);
+        location.href="../index.html";
+    } else {
+        alert("Verkeerde gebruikersnaam of wachtwoord!");
+    }
 }
 
-function register(){
-  let u=username.value;
-  let p=password.value;
-  let users=getUsers();
+function register() {
+    let u = username.value.trim();
+    let p = password.value;
+    let users = getUsers();
 
-  if(users[u]) return alert("Bestaat al");
+    if(users[u]) return alert("Gebruikersnaam bestaat al");
 
-  users[u]={password:p,scores:[]};
-  saveUsers(users);
+    users[u] = {password: p, scores: []};
+    saveUsers(users);
 
-  alert("Account gemaakt!");
+    alert("Account aangemaakt! Je kunt nu inloggen.");
 }
 </script>
 
