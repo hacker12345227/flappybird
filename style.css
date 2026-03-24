@@ -2,9 +2,10 @@ body {
   margin: 0;
   overflow: hidden;
   background: black;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
 }
 
+/* CANVAS */
 canvas {
   display: block;
   margin: 0 auto;
@@ -14,42 +15,35 @@ canvas {
 /* MENU */
 #menuButton {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  font-size: 30px;
+  top: 15px;
+  left: 15px;
+  font-size: 28px;
   color: white;
   cursor: pointer;
+  z-index: 10;
 }
 
 #menu {
   position: absolute;
   top: 0;
-  left: -200px;
-  width: 200px;
+  left: -220px;
+  width: 220px;
   height: 100%;
-  background: #222;
+  background: #111;
   transition: 0.3s;
   padding-top: 60px;
 }
 
 #menu a {
-  color: white;
-  padding: 15px;
   display: block;
+  color: white;
+  padding: 15px 20px;
   text-decoration: none;
+  border-bottom: 1px solid #222;
 }
 
-/* SKINS */
-#skins {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-}
-
-#skins img {
-  width: 40px;
-  margin: 5px;
-  cursor: pointer;
+#menu a:hover {
+  background: #222;
 }
 
 /* OVERLAY */
@@ -64,7 +58,17 @@ canvas {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.6);
   color: white;
-  font-size: 48px;
+  font-size: 42px;
+}
+
+#startButton {
+  margin-top: 20px;
+  padding: 12px 25px;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  background: #ffcc00;
+  cursor: pointer;
 }
