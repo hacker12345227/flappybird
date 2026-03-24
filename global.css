@@ -1,46 +1,5 @@
 body {
-  margin: 0;
-  overflow: hidden;
-  background: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-/* canvas blijft vaste breedte */
-canvas {
-  display: block;
-  background: black;
-}
-
-/* BOX */
-.container {
-  max-width: 400px;
-  margin: 80px auto;
-  background: white;
-  padding: 30px;
-  border-radius: 15px;
-  text-align: center;
-}
-
-/* INPUT */
-input {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-}
-
-/* BUTTON */
-button {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 10px;
-  background: #70c5ce;
-  color: white;
-  cursor: pointer;
+  font-family: Arial, sans-serif;
 }
 
 /* MENU */
@@ -51,6 +10,7 @@ button {
   font-size: 28px;
   color: white;
   cursor: pointer;
+  z-index: 10;
 }
 
 #menu {
@@ -61,10 +21,26 @@ button {
   background: #111;
   transition: 0.3s;
   padding-top: 60px;
+  z-index: 9;
 }
 
 #menu a {
   color: white;
   display: block;
   padding: 15px;
+  text-decoration: none;
+}
+
+#menu a:hover {
+  background: #222;
+}
+
+/* CONTAINER (login + leaderboard) */
+.container {
+  max-width: 400px;
+  margin: 80px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
 }
