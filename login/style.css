@@ -1,0 +1,67 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(#70c5ce, #4ec0ca);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Login container */
+.container {
+    max-width: 400px;
+    width: 90%;
+    background: white;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+/* Titels */
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* Buttons */
+button {
+    width: 48%;
+    padding: 12px;
+    margin: 10px 1%;
+    border: none;
+    border-radius: 10px;
+    background: #70c5ce;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #5ab0b9;
+}
+
+/* Links */
+a {
+    display: block;
+    margin-top: 15px;
+    color: #70c5ce;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
