@@ -35,10 +35,23 @@ function checkAssetsLoaded() {
 birdImg.onload = checkAssetsLoaded;
 groundImg.onload = checkAssetsLoaded;
 
-// Input
+// Flap
 function flap() { bird.velocity = bird.lift; }
-document.addEventListener("keydown", e => { if (e.code === "Space") flap(); });
+
+// Input: click op canvas
 canvas.addEventListener("click", flap);
+
+// Input: Space
+document.addEventListener("keydown", e => {
+    if (e.code === "Space") {
+        if (!gameStarted || gameOver) {
+            // Start of restart als overlay zichtbaar is
+            startButton.click();
+        } else {
+            flap();
+        }
+    }
+});
 
 // Start button
 startButton.addEventListener('click', () => {
