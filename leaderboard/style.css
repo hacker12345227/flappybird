@@ -1,0 +1,40 @@
+body {
+  background: black;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+}
+
+h1 {
+  margin-top: 40px;
+}
+
+#scoreList {
+  font-size: 24px;
+}
+
+#menuButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+#menu {
+  position: absolute;
+  top: 0;
+  left: -200px;
+  width: 200px;
+  height: 100%;
+  background: #222;
+  transition: 0.3s;
+  padding-top: 60px;
+}
+
+#menu a {
+  display: block;
+  color: white;
+  padding: 15px;
+  text-decoration: none;
+}
