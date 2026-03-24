@@ -26,14 +26,18 @@ birdImg.src = 'images/bird.png';
 const groundImg = new Image();
 groundImg.src = 'images/ground.png';
 
-// Pas overlay pas tonen als afbeeldingen geladen zijn
+const pipeImg = new Image();
+pipeImg.src = 'images/pipe.png';
+
+// Pas overlay tonen als alle assets geladen zijn
 let assetsLoaded = 0;
 function checkAssetsLoaded() {
     assetsLoaded++;
-    if (assetsLoaded === 2) overlay.style.display = 'flex';
+    if (assetsLoaded === 3) overlay.style.display = 'flex';
 }
 birdImg.onload = checkAssetsLoaded;
 groundImg.onload = checkAssetsLoaded;
+pipeImg.onload = checkAssetsLoaded;
 
 // Flap
 function flap() { bird.velocity = bird.lift; }
@@ -45,7 +49,6 @@ canvas.addEventListener("click", flap);
 document.addEventListener("keydown", e => {
     if (e.code === "Space") {
         if (!gameStarted || gameOver) {
-            // Start of restart als overlay zichtbaar is
             startButton.click();
         } else {
             flap();
@@ -88,7 +91,7 @@ function updatePipes() {
     pipes.forEach(pipe => {
         pipe.x -= 2;
 
-        // Collision check
+        // Collision
         if (bird.x < pipe.x + pipe.width && bird.x + bird.width > pipe.x &&
             (bird.y < pipe.top || bird.y + bird.height > canvasHeight - groundHeight - pipe.bottom)) {
             gameOver = true;
@@ -109,12 +112,18 @@ function drawBird() {
     ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
 }
 
-// Draw pipes
+// Draw pipes with image
 function drawPipes() {
-    ctx.fillStyle = "#2ecc71";
     pipes.forEach(pipe => {
-        ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
-        ctx.fillRect(pipe.x, canvasHeight - groundHeight - pipe.bottom, pipe.width, pipe.bottom);
+        // Top pipe (flipped)
+        ctx.save();
+        ctx.translate(pipe.x + pipe.width / 2, pipe.top / 2);
+        ctx.scale(1, -1);
+        ctx.drawImage(pipeImg, -pipe.width / 2, -pipe.top / 2, pipe.width, pipe.top);
+        ctx.restore();
+
+        // Bottom pipe
+        ctx.drawImage(pipeImg, pipe.x, canvasHeight - groundHeight - pipe.bottom, pipe.width, pipe.bottom);
     });
 }
 
@@ -147,7 +156,6 @@ function loop() {
     updateBird();
     updatePipes();
 
-    // Clear canvas
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
     drawPipes();
