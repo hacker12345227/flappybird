@@ -1,11 +1,21 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+
+// Dynamisch canvas fullscreen
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const canvasWidth = () => canvas.width;
+const canvasHeight = () => canvas.height;
+
+// Overlay elementen
 const overlay = document.getElementById('overlay');
 const overlayText = document.getElementById('overlayText');
 const startButton = document.getElementById('startButton');
-
-const canvasWidth = canvas.width;
-const canvasHeight = canvas.height;
 
 // Game variables
 let bird = { x: 50, y: 200, width: 34, height: 24, velocity: 0, gravity: 0.6, lift: -10 };
@@ -69,8 +79,8 @@ function updateBird() {
     bird.velocity += bird.gravity;
     bird.y += bird.velocity;
 
-    if (bird.y + bird.height > canvasHeight - groundHeight) {
-        bird.y = canvasHeight - groundHeight - bird.height;
+    if (bird.y + bird.height > canvasHeight() - groundHeight) {
+        bird.y = canvasHeight() - groundHeight - bird.height;
         gameOver = true;
     }
 
@@ -84,8 +94,8 @@ function updateBird() {
 function updatePipes() {
     if (frameCount % 90 === 0) {
         let gap = 150;
-        let top = Math.random() * (canvasHeight - groundHeight - gap - 50) + 25;
-        pipes.push({ x: canvasWidth, width: 52, top: top, bottom: canvasHeight - groundHeight - top - gap, passed: false });
+        let top = Math.random() * (canvasHeight() - groundHeight - gap - 50) + 25;
+        pipes.push({ x: canvasWidth(), width: 52, top: top, bottom: canvasHeight() - groundHeight - top - gap, passed: false });
     }
 
     pipes.forEach(pipe => {
@@ -93,7 +103,7 @@ function updatePipes() {
 
         // Collision
         if (bird.x < pipe.x + pipe.width && bird.x + bird.width > pipe.x &&
-            (bird.y < pipe.top || bird.y + bird.height > canvasHeight - groundHeight - pipe.bottom)) {
+            (bird.y < pipe.top || bird.y + bird.height > canvasHeight() - groundHeight - pipe.bottom)) {
             gameOver = true;
         }
 
@@ -109,11 +119,11 @@ function updatePipes() {
 
 // Draw background
 function drawBackground() {
-    ctx.fillStyle = "#70c5ce"; // luchtblauw
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight - groundHeight);
+    ctx.fillStyle = "#70c5ce"; // lucht
+    ctx.fillRect(0, 0, canvasWidth(), canvasHeight() - groundHeight);
 
-    ctx.fillStyle = "black"; // alles onder de grond zwart
-    ctx.fillRect(0, canvasHeight - groundHeight, canvasWidth, groundHeight);
+    ctx.fillStyle = "black"; // alles onder grond
+    ctx.fillRect(0, canvasHeight() - groundHeight, canvasWidth(), groundHeight);
 }
 
 // Draw bird
@@ -132,22 +142,22 @@ function drawPipes() {
         ctx.restore();
 
         // Bottom pipe
-        ctx.drawImage(pipeImg, pipe.x, canvasHeight - groundHeight - pipe.bottom, pipe.width, pipe.bottom);
+        ctx.drawImage(pipeImg, pipe.x, canvasHeight() - groundHeight - pipe.bottom, pipe.width, pipe.bottom);
     });
 }
 
 // Draw ground
 function drawGround() {
-    groundX = (groundX - 2) % canvasWidth;
-    ctx.drawImage(groundImg, groundX, canvasHeight - groundHeight, canvas.width, groundHeight);
-    ctx.drawImage(groundImg, groundX + canvas.width, canvasHeight - groundHeight, canvas.width, groundHeight);
+    groundX = (groundX - 2) % canvasWidth();
+    ctx.drawImage(groundImg, groundX, canvasHeight() - groundHeight, canvasWidth(), groundHeight);
+    ctx.drawImage(groundImg, groundX + canvasWidth(), canvasHeight() - groundHeight, canvasWidth(), groundHeight);
 }
 
 // Draw score
 function drawScore() {
     ctx.fillStyle = "white";
     ctx.font = "32px Arial";
-    ctx.fillText(score, canvasWidth / 2 - 10, 50);
+    ctx.fillText(score, canvasWidth() / 2 - 10, 50);
 }
 
 // Game loop
