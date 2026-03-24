@@ -48,7 +48,9 @@ function flap() {
     bird.velocity = bird.lift;
 }
 
-document.addEventListener("keydown", flap);
+document.addEventListener("keydown", (e) => {
+    if (e.code === "Space") flap();
+});
 canvas.addEventListener("click", flap);
 
 // Start button
@@ -64,23 +66,21 @@ function loop() {
     if (!gameStarted) return;
 
     if (gameOver) {
-        overlayText.textContent = `Game Over\nScore: ${score}`;
+        overlayText.innerHTML = `Game Over<br>Score: ${score}`;
         startButton.textContent = 'Restart';
         overlay.style.display = 'flex';
         return;
     }
 
-    // Update
     frameCount++;
     updateBird();
     updatePipes();
-
-    // Draw
     drawScene();
 
     requestAnimationFrame(loop);
 }
 
+// Bird update
 function updateBird() {
     bird.velocity += bird.gravity;
     bird.y += bird.velocity;
@@ -95,13 +95,16 @@ function updateBird() {
         bird.velocity = 0;
     }
 
-    bird.frame = frameCount % bird.flapFrames.length;
+    if (frameCount % 5 === 0) {
+        bird.frame = (bird.frame + 1) % bird.flapFrames.length;
+    }
 }
 
+// Pipes update
 function updatePipes() {
     if (frameCount % 90 === 0) {
-        let top = Math.random() * (canvasHeight / 2);
         let gap = 150;
+        let top = Math.random() * (canvasHeight - groundHeight - gap - 50) + 25;
         pipes.push({
             x: canvasWidth,
             width: 52,
@@ -131,6 +134,7 @@ function updatePipes() {
     pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
 }
 
+// Draw everything
 function drawScene() {
     // Background
     ctx.drawImage(bgImg, 0, 0, canvasWidth, canvasHeight - groundHeight);
@@ -143,12 +147,15 @@ function drawScene() {
         ctx.scale(1, -1);
         ctx.drawImage(pipeImg, -pipe.width / 2, -pipe.top / 2, pipe.width, pipe.top);
         ctx.restore();
+
         // Bottom pipe
         ctx.drawImage(pipeImg, pipe.x, canvasHeight - groundHeight - pipe.bottom, pipe.width, pipe.bottom);
     });
 
-    // Ground
-    ctx.drawImage(groundImg, 0, canvasHeight - groundHeight, canvasWidth, groundHeight);
+    // Moving ground
+    let groundX = -(frameCount * 2) % canvasWidth;
+    ctx.drawImage(groundImg, groundX, canvasHeight - groundHeight, canvasWidth, groundHeight);
+    ctx.drawImage(groundImg, groundX + canvasWidth, canvasHeight - groundHeight, canvasWidth, groundHeight);
 
     // Bird
     ctx.drawImage(bird.flapFrames[bird.frame], bird.x, bird.y, bird.width, bird.height);
@@ -159,6 +166,7 @@ function drawScene() {
     ctx.fillText(score, canvasWidth / 2 - 10, 50);
 }
 
+// Reset game
 function resetGame() {
     bird.y = 200;
     bird.velocity = 0;
