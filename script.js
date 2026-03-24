@@ -1,9 +1,8 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-// Dynamisch canvas fullscreen
+// Houd breedte vast, hoogte fullscreen
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
 resizeCanvas();
@@ -12,7 +11,7 @@ window.addEventListener("resize", resizeCanvas);
 const canvasWidth = () => canvas.width;
 const canvasHeight = () => canvas.height;
 
-// Overlay elementen
+// Overlay
 const overlay = document.getElementById('overlay');
 const overlayText = document.getElementById('overlayText');
 const startButton = document.getElementById('startButton');
@@ -51,18 +50,11 @@ pipeImg.onload = checkAssetsLoaded;
 
 // Flap
 function flap() { bird.velocity = bird.lift; }
-
-// Input: klik op canvas
 canvas.addEventListener("click", flap);
-
-// Input: Space
 document.addEventListener("keydown", e => {
     if (e.code === "Space") {
-        if (!gameStarted || gameOver) {
-            startButton.click();
-        } else {
-            flap();
-        }
+        if (!gameStarted || gameOver) startButton.click();
+        else flap();
     }
 });
 
@@ -78,16 +70,11 @@ startButton.addEventListener('click', () => {
 function updateBird() {
     bird.velocity += bird.gravity;
     bird.y += bird.velocity;
-
     if (bird.y + bird.height > canvasHeight() - groundHeight) {
         bird.y = canvasHeight() - groundHeight - bird.height;
         gameOver = true;
     }
-
-    if (bird.y < 0) {
-        bird.y = 0;
-        bird.velocity = 0;
-    }
+    if (bird.y < 0) { bird.y = 0; bird.velocity = 0; }
 }
 
 // Update pipes
@@ -97,51 +84,34 @@ function updatePipes() {
         let top = Math.random() * (canvasHeight() - groundHeight - gap - 50) + 25;
         pipes.push({ x: canvasWidth(), width: 52, top: top, bottom: canvasHeight() - groundHeight - top - gap, passed: false });
     }
-
     pipes.forEach(pipe => {
         pipe.x -= 2;
-
-        // Collision
         if (bird.x < pipe.x + pipe.width && bird.x + bird.width > pipe.x &&
-            (bird.y < pipe.top || bird.y + bird.height > canvasHeight() - groundHeight - pipe.bottom)) {
-            gameOver = true;
-        }
-
-        // Score
-        if (!pipe.passed && pipe.x + pipe.width < bird.x) {
-            score++;
-            pipe.passed = true;
-        }
+            (bird.y < pipe.top || bird.y + bird.height > canvasHeight() - groundHeight - pipe.bottom)) gameOver = true;
+        if (!pipe.passed && pipe.x + pipe.width < bird.x) { score++; pipe.passed = true; }
     });
-
     pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
 }
 
 // Draw background
 function drawBackground() {
-    ctx.fillStyle = "#70c5ce"; // lucht
+    ctx.fillStyle = "#70c5ce";
     ctx.fillRect(0, 0, canvasWidth(), canvasHeight() - groundHeight);
-
-    ctx.fillStyle = "black"; // alles onder grond
+    ctx.fillStyle = "black";
     ctx.fillRect(0, canvasHeight() - groundHeight, canvasWidth(), groundHeight);
 }
 
 // Draw bird
-function drawBird() {
-    ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
-}
+function drawBird() { ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height); }
 
 // Draw pipes
 function drawPipes() {
     pipes.forEach(pipe => {
-        // Top pipe (flipped)
         ctx.save();
         ctx.translate(pipe.x + pipe.width / 2, pipe.top / 2);
         ctx.scale(1, -1);
         ctx.drawImage(pipeImg, -pipe.width / 2, -pipe.top / 2, pipe.width, pipe.top);
         ctx.restore();
-
-        // Bottom pipe
         ctx.drawImage(pipeImg, pipe.x, canvasHeight() - groundHeight - pipe.bottom, pipe.width, pipe.bottom);
     });
 }
@@ -163,34 +133,25 @@ function drawScore() {
 // Game loop
 function loop() {
     if (!gameStarted) return;
-
     if (gameOver) {
         overlayText.innerHTML = `Game Over<br>Score: ${score}`;
         startButton.textContent = 'Restart';
         overlay.style.display = 'flex';
         return;
     }
-
     frameCount++;
     updateBird();
     updatePipes();
-
     drawBackground();
     drawPipes();
     drawGround();
     drawBird();
     drawScore();
-
     requestAnimationFrame(loop);
 }
 
 // Reset game
 function resetGame() {
-    bird.y = 200;
-    bird.velocity = 0;
-    pipes = [];
-    score = 0;
-    gameOver = false;
-    frameCount = 0;
-    groundX = 0;
+    bird.y = 200; bird.velocity = 0;
+    pipes = []; score = 0; gameOver = false; frameCount = 0; groundX = 0;
 }
