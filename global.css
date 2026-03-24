@@ -1,7 +1,17 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(#70c5ce, #4ec0ca);
+  overflow: hidden;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* canvas blijft vaste breedte */
+canvas {
+  display: block;
+  background: black;
 }
 
 /* BOX */
