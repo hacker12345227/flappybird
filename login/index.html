@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<style>
+body {
+  background: black;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+}
+
+input, button {
+  padding: 10px;
+  margin: 10px;
+  font-size: 18px;
+}
+</style>
+</head>
+<body>
+
+<h1>Login / Register</h1>
+
+<input id="username" placeholder="Gebruikersnaam"><br>
+<input id="password" type="password" placeholder="Wachtwoord"><br>
+
+<button onclick="login()">Login</button>
+<button onclick="register()">Register</button>
+
+<script>
+function getUsers() {
+    return JSON.parse(localStorage.getItem("users")) || {};
+}
+
+function saveUsers(users) {
+    localStorage.setItem("users", JSON.stringify(users));
+}
+
+function login() {
+    let u = username.value;
+    let p = password.value;
+
+    let users = getUsers();
+
+    if (users[u] && users[u].password === p) {
+        localStorage.setItem("currentUser", u);
+        window.location.href = "../index.html";
+    } else {
+        alert("Verkeerde login");
+    }
+}
+
+function register() {
+    let u = username.value;
+    let p = password.value;
+
+    let users = getUsers();
+
+    if (users[u]) {
+        alert("Bestaat al!");
+        return;
+    }
+
+    users[u] = {
+        password: p,
+        skin: "bird1.png",
+        scores: []
+    };
+
+    saveUsers(users);
+    alert("Account aangemaakt!");
+}
+</script>
+
+</body>
+</html>
